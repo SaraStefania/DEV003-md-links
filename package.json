@@ -8,5 +8,37 @@
     "createdAt": "2023-02-07T18:15:01.196Z",
     "version": "5.5.0",
     "commit": "a63a770ea33332882790401851df337734b0b734"
-  }
+  },
+  "description": "## Índice",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "eslint": "eslint --ext .js test/",
+    "pretest": "npm run eslint",
+    "test": "jest --verbose --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sara040616/DEV003-md-links.git"
+  },
+  "author": "Sara Sierra",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sara040616/DEV003-md-links/issues"
+  },
+  "homepage": "https://github.com/sara040616/DEV003-md-links#readme",
+  "dependencies": {
+    "eslint": "^8.35.0",
+    "prettier": "^2.8.4"
+  },
+  "devDependencies": {
+    "jest": "^27.5.1"
+  },
+  "keywords": [
+    "javascript",
+    "node.js",
+    "CLI"
+  ]
 }
