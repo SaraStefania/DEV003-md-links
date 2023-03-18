@@ -23,6 +23,18 @@ const absolutePath = (router) => {
 const convertAbsolute = (router) => {
    return path.resolve(router)
 }
+
+//-----------------Validar si es un archivo---------------
+const validateFile = (router) =>{
+  //se utiliza para obtener información sobre el archivo en la ruta
+  const stats = fs.statSync(router)
+  if(stats.isFile()){
+    console.log(`${router} es un archivo`)
+  }else{
+    console.log(`${router} No es un archivo`)
+  }
+}
+validateFile(directorios)
 //-----------------validar si es un directorio---------------
 const directorio = (router, arrayOfFiles = []) => {
   //leyendo el contenido de la ruta
@@ -41,22 +53,36 @@ const directorio = (router, arrayOfFiles = []) => {
   }
   
   console.log(directorio(directorios))
-
+//------------------Traer links---------------------
+const extractLinks = (router) => {
+  fs.readFile(router, 'utf8', (err, data) => {
+    if (err) {
+      console.error('Error:', err)
+      return
+    }
+//devuelve todas las ocurrencias de una expresión regular
+    const links = data.match(/\[(.+?)\]\((https?:\/\/[^\s]+)\)/g)
+    console.log(links)
+  })
+}
+extractLinks(absoluta)
 
 //------------------Validar si hay archivos .md y traerlos------------------
 const filesMd = (router) => {
-const filesArray = directorio(router);
-filesArray.forEach(file =>{
-    const stat = fs.statSync(file);
-    if(stat.isDirectory()){
-        filesMd(file)
-    }else if(path.extname(file) === '.md'){
-        console.log(file)
-    }
-})
-}
-filesMd(directorios)
-
+  //se utiliza para obtener información sobre el archivo en la ruta
+  const stat = fs.statSync(router);
+  if (stat.isDirectory()) {
+    const filesArray = directorio(router);
+    filesArray.forEach((file) => {
+      filesMd(file);
+    });
+  } else if (path.extname(router) === ".md") {
+    extractLinks(router);
+  } else {
+    console.log(`${router} no es un archivo Markdown válido.`);
+  }
+};
+filesMd(absoluta)
 
 //------------------exportar-------------------------
 module.exports = () => {
