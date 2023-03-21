@@ -31,6 +31,7 @@
   "homepage": "https://github.com/sara040616/DEV003-md-links#readme",
   "dependencies": {
     "eslint": "^8.35.0",
+    "fs": "^0.0.1-security",
     "prettier": "^2.8.4"
   },
   "devDependencies": {

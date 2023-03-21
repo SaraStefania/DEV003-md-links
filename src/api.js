@@ -10,31 +10,28 @@ const falsa = '/rutaFalsa'
 const directorios2 = '/Users/jessira/Desktop/pruebas/red social'
 
 //----------------Validar si la ruta existe-------------
-const rutaValida = (router) => {
-    return fs.existsSync(router)
-}
+const rutaValida = (router) => fs.existsSync(router)
 
 //-------------verificar si la ruta es absoluta--------------
-const absolutePath = (router) => {
-    return path.isAbsolute(router)  
-}
+const absolutePath = (router) => path.isAbsolute(router)  
+
 
 //----------------pasar la ruta relativa a absoluta---------------
-const convertAbsolute = (router) => {
-   return path.resolve(router)
-}
+const convertAbsolute = (router) => path.resolve(router)
 
 //-----------------Validar si es un archivo---------------
 const validateFile = (router) =>{
   //se utiliza para obtener información sobre el archivo en la ruta
   const stats = fs.statSync(router)
   if(stats.isFile()){
-    console.log(`${router} es un archivo`)
+    console.log('Es un archivo')
   }else{
-    console.log(`${router} No es un archivo`)
+    console.log('No es un archivo')
   }
 }
-validateFile(directorios)
+
+
+
 //-----------------validar si es un directorio---------------
 const directorio = (router, arrayOfFiles = []) => {
   //leyendo el contenido de la ruta
@@ -53,6 +50,8 @@ const directorio = (router, arrayOfFiles = []) => {
   }
   
   console.log(directorio(directorios))
+
+
 //------------------Traer links---------------------
 const extractLinks = (router) => {
   fs.readFile(router, 'utf8', (err, data) => {
@@ -61,11 +60,21 @@ const extractLinks = (router) => {
       return
     }
 //devuelve todas las ocurrencias de una expresión regular
-    const links = data.match(/\[(.+?)\]\((https?:\/\/[^\s]+)\)/g)
-    console.log(links)
+const links = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+let linksData = []
+//se utiliza para almacenar el resultado de la expresion regular 
+    let match
+    while ((match = links.exec(data)) !== null) {
+      const text = match[1]
+      const href = match[2]
+      const file = router
+      linksData.push({text, href, file});
+    }
+    console.log(linksData)
   })
 }
 extractLinks(absoluta)
+
 
 //------------------Validar si hay archivos .md y traerlos------------------
 const filesMd = (router) => {
@@ -84,11 +93,14 @@ const filesMd = (router) => {
 };
 filesMd(absoluta)
 
+
 //------------------exportar-------------------------
-module.exports = () => {
+module.exports = {
 rutaValida,
 absolutePath,
 convertAbsolute,
-directorio, 
-filesMd
+validateFile,
+directorio
+//filesMd
 }
+// module.exports = rutaValida
