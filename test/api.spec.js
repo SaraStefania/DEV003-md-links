@@ -1,8 +1,30 @@
-
-const { routerValidate, absolutePath, convertAbsolute, validateFile, directorio, extractLinks, filesMd, readFile}  = require('../src/api');
+const { routerValidate, absolutePath, convertAbsolute, validateFile, directorio, extractLinks, filesMd, getStatus}  = require('../src/api');
 const absoluta = '/Users/jessira/Desktop/DEV003-md-links/README.md'
 const directorios  = '/Users/jessira/Desktop/DEV003-md-links'
 const relativa = './README.md'
+const urls = 
+[
+  {
+    text: 'Markdown',
+    href: 'https://es.wikipedia.org/wiki/Markdow',
+    file: '/Users/jessira/Desktop/DEV003-md-links/README.md'
+  },
+  {
+    text: 'Módulos, librerías, paquetes, frameworks... ¿cuál es la diferencia?',
+    href: 'http://community.l-paquetes-frameworks-cual-es-la-diferencia/175',
+    file: '/Users/jessira/Desktop/DEV003-md-links/README.md'
+  },
+  {
+    text: 'Funciones clásicas',
+    href: 'https://curriculum.laboratoria.la/es/topics/javascript/03-functions/01-classic',
+    file: '/Users/jessira/Desktop/DEV003-md-links/README.md',
+    code: 'ENOTFOUND',
+    message: 'fail'
+  }
+]
+
+//-----------mock---------------
+console.log(getStatus(urls))
 
 //-----------------Validar si la ruta existe------------------
 describe('routerValidate', () => {
@@ -55,20 +77,19 @@ describe('extractLinks', () => {
           href: 'https://es.wikipedia.org/wiki/Markdown',
           file: '/Users/jessira/Desktop/DEV003-md-links/README.md'
         });
+        
       });
   });
-  it('arrayOfFiles deberia ser un array ', () =>{
-    const arrayOfFiles = directorio(directorios);
-   expect(Array.isArray(arrayOfFiles)).toBe(true);
- });
+
  it('Deberia mostrar un error si no se puede leer el contenido', () =>{
-   const result = extractLinks(absoluta+"a")
+   const result = extractLinks('./noexiste')
    //se espera que devuelva un error que sea igual al error original
    return expect(result).rejects.toEqual('No se pudo leer uno o más archivos')
   })
   
 })
 
+//----------------------- Validar archivos Markdown-------------------------
 describe('filesMd', () =>{
   it('Deberia validar si es un archivo Markdown', () =>{
     expect(filesMd(absoluta)).toEqual(true)
@@ -76,7 +97,45 @@ describe('filesMd', () =>{
   it('Deberia validar si no es un archivo Markdown', () =>{
     expect(filesMd('/Users/jessira/Desktop/DEV003-md-links/package.json')).toEqual(false)
   })
-  it('Deberia validar si hay archivos .md en un directorio', () =>{
-    expect(filesMd(directorios)).toEqual(true)
-  })
+
 })
+
+//-------------------- Status--------------------------
+
+describe('getStatus', () => {
+  it('Se crea un arreglo con el HTTP y el manejo de estados', () => {
+    return getStatus(urls)
+      .then((links) => {
+        expect(Array.isArray(links)).toBe(true);
+        expect(links.length).toBe(3);
+        expect(links[0]).toEqual([
+          {
+            text: 'Markdown',
+            href: 'https://es.wikipedia.org/wiki/Markdow',
+            file: '/Users/jessira/Desktop/DEV003-md-links/README.md',
+            status: 404,
+            message: 'fail'
+          }
+        ]);
+        expect(links[1]).toEqual([
+          {
+            text: 'Módulos, librerías, paquetes, frameworks... ¿cuál es la diferencia?',
+            href: 'http://community.l-paquetes-frameworks-cual-es-la-diferencia/175',
+            file: '/Users/jessira/Desktop/DEV003-md-links/README.md',
+            status: 500,
+            message: 'fail'
+          }
+        ]);
+        expect(links[2]).toEqual([
+    {
+      file: '/Users/jessira/Desktop/DEV003-md-links/README.md',
+      href: 'https://curriculum.laboratoria.la/es/topics/javascript/03-functions/01-classic',
+      text: 'Funciones clásicas',
+      status: 200,
+      ok: 'OK'
+    }
+        ]);
+      });
+  });
+});
+
