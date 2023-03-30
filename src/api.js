@@ -1,9 +1,28 @@
-const axios = require('axios')
+const axios = require('axios').default;
+
 //--------------permite interactuar con los archivos del sistema-----------------
 const fs = require('fs');
 // -------------se incluye modulo de ruta---------------
 const path = require('path');
-
+const urls = [
+  {
+    text: 'Markdown',
+    href: 'https://es.wikipedia.org/wiki/Markdow',
+    file: '/Users/jessira/Desktop/DEV003-md-links/README.md'
+  },
+  {
+    text: 'Módulos, librerías, paquetes, frameworks... ¿cuál es la diferencia?',
+    href: 'http://community.l-paquetes-frameworks-cual-es-la-diferencia/175',
+    file: '/Users/jessira/Desktop/DEV003-md-links/README.md'
+  },
+  {
+    text: 'Funciones clásicas',
+    href: 'https://curriculum.laboratoria.la/es/topics/javascript/03-functions/01-classic',
+    file: '/Users/jessira/Desktop/DEV003-md-links/README.md',
+    code: 'ENOTFOUND',
+    message: 'fail'
+  }
+]
 const absoluta = '/Users/jessira/Desktop/DEV003-md-links/README.md'
 const directorios  = '/Users/jessira/Desktop/DEV003-md-links'
 const relativa = './README.md'
@@ -30,7 +49,7 @@ const validateFile = (router) =>{
     return 'No es un archivo'
   }
 }
-console.log(validateFile(directorios))
+
 
 
 
@@ -52,95 +71,89 @@ const directorio = (router, arrayOfFiles = []) => {
     return arrayOfFiles
   }
   
-  // Se crea un método "readFile" para envolver el fs.readFile en una promesa.
-  const readFile = (file)=> {
-    return new Promise ((resolve, reject)=> {
-      fs.readFile(file, 'utf8', (err, data) =>{
-        if (err) {
-          reject(new Error('No se pudo leer archivo'));
-        }
-
-        resolve(data )
-      })
-    })
-  }
-
-
-
-//------------------Traer text, href, file---------------------
-const extractLinks = (router) =>{
-  return new Promise((resolve, reject) =>{
-    let arrayOfFiles = [];
-    // Usamos try/catch para controlar cualquier error que surja mientras se leen/validan los archivos a procesar
-    try {
-      //obtiene la información, si es un directorio 
-      if (fs.statSync(router).isDirectory()) {
-        //se obtienen todos los archivos y se guarda en un array 
-        arrayOfFiles = directorio(router);
-      } else {
-        // Si la ruta es un archivo, se agrega al array directamente
-        arrayOfFiles.push(router);
-      }
-      
-      //Se utiliza un .map para crear un array de promesas, una por cada archivo a leer
-      const filesData = arrayOfFiles.map((file)=> readFile(file));
-
-      // Se utiliza Promise.all para esperar a que todas las promesas del array filesData se resuelvan
-      Promise.all(filesData).then((files)=>{
-        const linksData=[];
-        const links = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
-        files.forEach((file)=>{
-          let match;
-          while ((match = links.exec(file)) !== null) {
-            const text = match[1];
-            const href = match[2];
-            const file = router;
-            linksData.push({text, href, file});
-          }
-        })
-        resolve(linksData);
-      })
-
-    } catch(err) {
-      //Se rechaza la promesa si algo sale mal durante el proceso.
-      reject('No se pudo leer uno o más archivos');
-    }
-  });
-};
-
-//se llama a la función extractLinks con la ruta del directorio
-extractLinks(absoluta)
-  .then((linksData) => {
-    console.log(linksData);
-  })
-  .catch((error) => {
-    console.error(error);
-  });
-
-
-
 
 //------------------Validar si hay archivos .md y traerlos------------------
 const filesMd = (router) => {
-  //se utiliza para obtener información sobre el archivo en la ruta
-  const stat = fs.statSync(router);
-   //variable booleana
-   let hayArchivosMd = false;
-  if (stat.isDirectory()) {
-    const filesArray = directorio(router);
-    filesArray.forEach((file) => {
-     if(filesMd(file)){
-      hayArchivosMd = true
-     }
-    });
-  } else if (path.extname(router) === ".md") {
-  hayArchivosMd = true
+  if (path.extname(router) === ".md") {
+  return true
   }else{
-    hayArchivosMd = false
+    return false
   }
-  return hayArchivosMd
+
 };
-console.log(filesMd(absoluta))
+
+
+//------------------Traer text, href, file---------------------
+// 
+const extractLinks = (router) => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(router, 'utf8', (err, data) => {
+      if(err){
+        reject('No se pudo leer uno o más archivos')
+      }
+      const links = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+      let linksData = []
+      let match
+      while ((match = links.exec(data)) !== null) {
+        const text = match[1]
+        const href = match[2]
+        const file = router
+        linksData.push({text, href, file,});
+      }
+      resolve(linksData)
+    })
+  })
+}
+
+
+
+
+
+
+//-------------------Hallar el status--------------------
+
+const getStatus = (link) =>
+  Promise.all(
+    link.map((element) =>
+      axios.get(element.href)
+        .then((res) => ([{
+          file: element.file,
+          href: element.href,
+          text: element.text,
+          status: res.status,
+          ok: res.statusText,
+        }]))
+        .catch((error) => {
+        //almacenar el código de estado del error
+          let errorStatus;
+        
+         // si error.response existe
+          if (error.response) {
+      // La respuesta fue hecha y el servidor respondió con un código de estado
+      // que esta fuera del rango de 2xx
+            errorStatus = error.response.status;
+        // La petición fue hecha pero no se recibió respuesta
+          } else if (error.request) {
+            //e asigna un código de estado de 500 a errorStatus
+            errorStatus = 500;
+          } else {
+            // Algo paso al preparar la petición que lanzo un Error y
+            //se asigna un código de estado de 400 a errorStatus
+            errorStatus = 400;
+          }
+          //Se devuelve un objeto con la información del enlace que no se pudo procesar
+          return [{
+            text: element.text,
+            href: element.href,
+            file: element.file,
+            status: errorStatus,
+            message: 'fail'
+          }];
+  })  
+    )
+  );
+
+  
 
 
 //------------------exportar-------------------------
@@ -152,5 +165,5 @@ validateFile,
 directorio,
 extractLinks, 
 filesMd, 
-readFile
+getStatus
 }
