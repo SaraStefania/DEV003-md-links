@@ -152,6 +152,13 @@ const getStatus = (link) =>
   })  
     )
   );
+  getStatus(urls)
+  .then((links)=> {
+    console.log(links)
+  })
+  .catch((err) =>{
+    console.log(err)
+  })
 
   
 
