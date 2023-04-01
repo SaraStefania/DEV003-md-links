@@ -17,9 +17,7 @@ const urls =
   {
     text: 'Funciones clásicas',
     href: 'https://curriculum.laboratoria.la/es/topics/javascript/03-functions/01-classic',
-    file: '/Users/jessira/Desktop/DEV003-md-links/README.md',
-    code: 'ENOTFOUND',
-    message: 'fail'
+    file: '/Users/jessira/Desktop/DEV003-md-links/README.md'
   }
 ]
 
@@ -103,7 +101,7 @@ describe('filesMd', () =>{
 //-------------------- Status--------------------------
 
 describe('getStatus', () => {
-  it('Se crea un arreglo con el HTTP y el manejo de estados', () => {
+  it('Se crea un arreglo con el HTTP y el manejo de estado', () => {
     return getStatus(urls)
       .then((links) => {
         expect(Array.isArray(links)).toBe(true);
@@ -127,13 +125,14 @@ describe('getStatus', () => {
           }
         ]);
         expect(links[2]).toEqual([
-    {
-      file: '/Users/jessira/Desktop/DEV003-md-links/README.md',
-      href: 'https://curriculum.laboratoria.la/es/topics/javascript/03-functions/01-classic',
-      text: 'Funciones clásicas',
-      status: 200,
-      ok: 'OK'
-    }
+          {
+            
+    text: 'Funciones clásicas',
+    href: 'https://curriculum.laboratoria.la/es/topics/javascript/03-functions/01-classic',
+    file: '/Users/jessira/Desktop/DEV003-md-links/README.md',
+            status: 200,
+            ok: 'OK'
+          }
         ]);
       });
   });
