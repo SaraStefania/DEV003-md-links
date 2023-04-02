@@ -4,30 +4,7 @@ const axios = require('axios').default;
 const fs = require('fs');
 // -------------se incluye modulo de ruta---------------
 const path = require('path');
-const urls = [
-  {
-    text: 'Markdown',
-    href: 'https://es.wikipedia.org/wiki/Markdow',
-    file: '/Users/jessira/Desktop/DEV003-md-links/README.md'
-  },
-  {
-    text: 'Módulos, librerías, paquetes, frameworks... ¿cuál es la diferencia?',
-    href: 'http://community.l-paquetes-frameworks-cual-es-la-diferencia/175',
-    file: '/Users/jessira/Desktop/DEV003-md-links/README.md'
-  },
-  {
-    text: 'Funciones clásicas',
-    href: 'https://curriculum.laboratoria.la/es/topics/javascript/03-functions/01-classic',
-    file: '/Users/jessira/Desktop/DEV003-md-links/README.md',
-    code: 'ENOTFOUND',
-    message: 'fail'
-  }
-]
-const absoluta = '/Users/jessira/Desktop/DEV003-md-links/README.md'
-const directorios  = '/Users/jessira/Desktop/DEV003-md-links'
-const relativa = './README.md'
-const falsa = '/rutaFalsa'
-const directorios2 = '/Users/jessira/Desktop/pruebas/red social'
+
 
 //----------------Validar si la ruta existe-------------
 const routerValidate = (router) => fs.existsSync(router)
@@ -51,9 +28,6 @@ const validateFile = (router) =>{
 }
 
 
-
-
-
 //-----------------validar si es un directorio---------------
 const directorio = (router, arrayOfFiles = []) => {
   //leyendo el contenido de la ruta
@@ -70,19 +44,31 @@ const directorio = (router, arrayOfFiles = []) => {
     })
     return arrayOfFiles
   }
+
   
 
 //------------------Validar si hay archivos .md y traerlos------------------
-const filesMd = (router) => {
-  if (path.extname(router) === ".md") {
-  return true
-  }else{
-    return false
+
+const filesMdDirectorios = (ruta) => {
+  //obtener información sobre el archivo o directorio 
+  const stat = fs.statSync(ruta);
+  if (stat.isDirectory()) {
+    //Se obtiene una lista de archivos en el directorio
+    const files = fs.readdirSync(ruta);
+    //se recorre cada archivo 
+    for (let i = 0; i < files.length; i++) {
+      if (path.extname(files[i]) === '.md') {
+        return true;
+      }
+    }
+    return false;
+    //si la ruta es un archivo comprueba si contiene archivos .md
+  } else if (stat.isFile() && path.extname(ruta) === '.md') {
+    return true;
+  } else {
+    return false;
   }
-
-};
-
-
+}
 //------------------Traer text, href, file---------------------
 // 
 const extractLinks = (router) => {
@@ -107,6 +93,25 @@ const extractLinks = (router) => {
 
 
 
+
+//-------------------extraer links de directorios------------------------
+const extractLinksFromDirectory = (dir) => {
+  //obtener un array con todos los archivos y subdirectorios
+  const files = directorio(dir);
+  //se crea un array que va a contener todas las promesas devueltas por extraclinks
+  const promises = files.map(file => extractLinks(file));
+  //Retorna una promesa que se resolverá cuando se hayan resuelto todas las promesas del array promises
+  return Promise.all(promises).then(linksDataArray => {
+    let linksData = [];
+    //recorrer todos los arrays de datos de enlaces 
+    for (let i = 0; i < linksDataArray.length; i++) {
+      //agregar los enlaces del array actual a linksData
+      linksData = linksData.concat(linksDataArray[i]);
+    }
+    //contiene todos los enlaces extraídos de todos los archivos encontrados en el directorio
+    return linksData;
+  })
+}
 
 
 
@@ -152,13 +157,7 @@ const getStatus = (link) =>
   })  
     )
   );
-  getStatus(urls)
-  .then((links)=> {
-    console.log(links)
-  })
-  .catch((err) =>{
-    console.log(err)
-  })
+ 
 
   
 
@@ -171,6 +170,7 @@ convertAbsolute,
 validateFile,
 directorio,
 extractLinks, 
-filesMd, 
-getStatus
+filesMdDirectorios,
+getStatus,
+extractLinksFromDirectory
 }
