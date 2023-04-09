@@ -1,9 +1,5 @@
-const { routerValidate, convertAbsolute, validateFile,  extractLinks, filesMdDirectorios, getStatus, extractLinksFromDirectory } = require('./api');
-const absoluta = '/Users/jessira/Desktop/DEV003-md-links/README.md'
-const directorios1  = '/Users/jessira/Desktop/DEV003-md-links'
-const relativa = './README.md'
-const falsa = '/rutaFalsa'
-const directorios2 = '/Users/jessira/Desktop/pruebas/red social'
+const { routerValidate, convertAbsolute, validateFile,  extractLinks, filesMd, getStatus } = require('./api');
+
   
 const mdLinks = (path, options) => {
     return new Promise((resolve, reject) => {
@@ -16,11 +12,12 @@ const mdLinks = (path, options) => {
   //valida si es un archivo
       const checkFile = validateFile(absoluteConvert);
       //trae los archivos .md
-      const isMdFile = filesMdDirectorios(absoluteConvert);
+      const isMdFile = filesMd(absoluteConvert);
   //si es un archivo y contiene archivos .md
       if (checkFile === 'Es un archivo' && isMdFile) {
         //extrae los links 
         extractLinks(absoluteConvert)
+        //manejar los resultados de la promesa de extractLInks
           .then((links) => {
             //si la opcion es true 
             if (options && options.validate) {
@@ -34,7 +31,7 @@ const mdLinks = (path, options) => {
           //si es un directorio y contiene archivos .md
       } else if (checkFile === 'No es un archivo' && isMdFile) {
         //extrae los links
-        extractLinksFromDirectory(absoluteConvert)
+        extractLinks(absoluteConvert)
           .then((links) => {
             //si la opcion es true 
             if (options && options.validate) {
@@ -52,8 +49,10 @@ const mdLinks = (path, options) => {
     });
   };
   
-mdLinks('/Users/jessira/Desktop/DEV003-md-links', {validate: true})
-  .then((linksData) => console.log(linksData))
-  .catch((error) => console.log(error));
+// mdLinks('/Users/jessira/Desktop/DEV003-md-links/prueba', {validate: true})
+//   .then((linksData) => console.log(linksData))
+//   .catch((error) => console.log(error));
 
-module.exports = mdLinks;
+module.exports ={
+  mdLinks
+} 
