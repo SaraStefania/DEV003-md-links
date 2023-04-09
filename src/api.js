@@ -4,30 +4,11 @@ const axios = require('axios').default;
 const fs = require('fs');
 // -------------se incluye modulo de ruta---------------
 const path = require('path');
-const urls = [
-  {
-    text: 'Markdown',
-    href: 'https://es.wikipedia.org/wiki/Markdow',
-    file: '/Users/jessira/Desktop/DEV003-md-links/README.md'
-  },
-  {
-    text: 'Módulos, librerías, paquetes, frameworks... ¿cuál es la diferencia?',
-    href: 'http://community.l-paquetes-frameworks-cual-es-la-diferencia/175',
-    file: '/Users/jessira/Desktop/DEV003-md-links/README.md'
-  },
-  {
-    text: 'Funciones clásicas',
-    href: 'https://curriculum.laboratoria.la/es/topics/javascript/03-functions/01-classic',
-    file: '/Users/jessira/Desktop/DEV003-md-links/README.md',
-    code: 'ENOTFOUND',
-    message: 'fail'
-  }
-]
+
 const absoluta = '/Users/jessira/Desktop/DEV003-md-links/README.md'
 const directorios  = '/Users/jessira/Desktop/DEV003-md-links'
 const relativa = './README.md'
-const falsa = '/rutaFalsa'
-const directorios2 = '/Users/jessira/Desktop/pruebas/red social'
+
 
 //----------------Validar si la ruta existe-------------
 const routerValidate = (router) => fs.existsSync(router)
@@ -51,13 +32,10 @@ const validateFile = (router) =>{
 }
 
 
-
-
-
 //-----------------validar si es un directorio---------------
 const directorio = (router, arrayOfFiles = []) => {
   //leyendo el contenido de la ruta
-  //devuelve una matriz de nombres de archivo y directorio
+  //devuelve un array de nombres de archivo y directorio
     const files = fs.readdirSync(router)
     files.forEach(file => {
         // para obtener información sobre él y determinar si es un archivo o un directorio.
@@ -70,21 +48,18 @@ const directorio = (router, arrayOfFiles = []) => {
     })
     return arrayOfFiles
   }
+
   
 
 //------------------Validar si hay archivos .md y traerlos------------------
-const filesMd = (router) => {
+ const filesMd = (router) => {
   if (path.extname(router) === ".md") {
   return true
   }else{
     return false
   }
-
 };
-
-
 //------------------Traer text, href, file---------------------
-// 
 const extractLinks = (router) => {
   return new Promise((resolve, reject) => {
     fs.readFile(router, 'utf8', (err, data) => {
@@ -108,14 +83,16 @@ const extractLinks = (router) => {
 
 
 
-
-
 //-------------------Hallar el status--------------------
 
 const getStatus = (link) =>
+//se resuelve cuando todas las promesas se resuelvan 
   Promise.all(
+    // recorre cada objeto element del arreglo link
     link.map((element) =>
+    //ejecuta una petición HTTP - una promesa que se resuelve con la respuesta de la peticion
       axios.get(element.href)
+      //si todo sale bein
         .then((res) => ([{
           file: element.file,
           href: element.href,
@@ -152,13 +129,7 @@ const getStatus = (link) =>
   })  
     )
   );
-  getStatus(urls)
-  .then((links)=> {
-    console.log(links)
-  })
-  .catch((err) =>{
-    console.log(err)
-  })
+ 
 
   
 
@@ -171,6 +142,6 @@ convertAbsolute,
 validateFile,
 directorio,
 extractLinks, 
-filesMd, 
+filesMd,
 getStatus
 }
