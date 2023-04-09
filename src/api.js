@@ -5,6 +5,10 @@ const fs = require('fs');
 // -------------se incluye modulo de ruta---------------
 const path = require('path');
 
+const absoluta = '/Users/jessira/Desktop/DEV003-md-links/README.md'
+const directorios  = '/Users/jessira/Desktop/DEV003-md-links'
+const relativa = './README.md'
+
 
 //----------------Validar si la ruta existe-------------
 const routerValidate = (router) => fs.existsSync(router)
@@ -31,7 +35,7 @@ const validateFile = (router) =>{
 //-----------------validar si es un directorio---------------
 const directorio = (router, arrayOfFiles = []) => {
   //leyendo el contenido de la ruta
-  //devuelve una matriz de nombres de archivo y directorio
+  //devuelve un array de nombres de archivo y directorio
     const files = fs.readdirSync(router)
     files.forEach(file => {
         // para obtener información sobre él y determinar si es un archivo o un directorio.
@@ -48,29 +52,14 @@ const directorio = (router, arrayOfFiles = []) => {
   
 
 //------------------Validar si hay archivos .md y traerlos------------------
-
-const filesMdDirectorios = (ruta) => {
-  //obtener información sobre el archivo o directorio 
-  const stat = fs.statSync(ruta);
-  if (stat.isDirectory()) {
-    //Se obtiene una lista de archivos en el directorio
-    const files = fs.readdirSync(ruta);
-    //se recorre cada archivo 
-    for (let i = 0; i < files.length; i++) {
-      if (path.extname(files[i]) === '.md') {
-        return true;
-      }
-    }
-    return false;
-    //si la ruta es un archivo comprueba si contiene archivos .md
-  } else if (stat.isFile() && path.extname(ruta) === '.md') {
-    return true;
-  } else {
-    return false;
+ const filesMd = (router) => {
+  if (path.extname(router) === ".md") {
+  return true
+  }else{
+    return false
   }
-}
+};
 //------------------Traer text, href, file---------------------
-// 
 const extractLinks = (router) => {
   return new Promise((resolve, reject) => {
     fs.readFile(router, 'utf8', (err, data) => {
@@ -94,33 +83,16 @@ const extractLinks = (router) => {
 
 
 
-//-------------------extraer links de directorios------------------------
-const extractLinksFromDirectory = (dir) => {
-  //obtener un array con todos los archivos y subdirectorios
-  const files = directorio(dir);
-  //se crea un array que va a contener todas las promesas devueltas por extraclinks
-  const promises = files.map(file => extractLinks(file));
-  //Retorna una promesa que se resolverá cuando se hayan resuelto todas las promesas del array promises
-  return Promise.all(promises).then(linksDataArray => {
-    let linksData = [];
-    //recorrer todos los arrays de datos de enlaces 
-    for (let i = 0; i < linksDataArray.length; i++) {
-      //agregar los enlaces del array actual a linksData
-      linksData = linksData.concat(linksDataArray[i]);
-    }
-    //contiene todos los enlaces extraídos de todos los archivos encontrados en el directorio
-    return linksData;
-  })
-}
-
-
-
 //-------------------Hallar el status--------------------
 
 const getStatus = (link) =>
+//se resuelve cuando todas las promesas se resuelvan 
   Promise.all(
+    // recorre cada objeto element del arreglo link
     link.map((element) =>
+    //ejecuta una petición HTTP - una promesa que se resuelve con la respuesta de la peticion
       axios.get(element.href)
+      //si todo sale bein
         .then((res) => ([{
           file: element.file,
           href: element.href,
@@ -170,7 +142,6 @@ convertAbsolute,
 validateFile,
 directorio,
 extractLinks, 
-filesMdDirectorios,
-getStatus,
-extractLinksFromDirectory
+filesMd,
+getStatus
 }
