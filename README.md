@@ -58,19 +58,21 @@ El segundo paso es incertar la ruta a validar: __md-links ./path-a-evaluar.md__
 
 Sólo colocando la ruta obtendremos un arreglo de objetos con las propiedades:
 
-__Href:__ URL encontrada.
+```Href:``` URL encontrada.
 
-__Text:__ Texto que aparecía dentro del link (<a>).
+```Text:``` Texto que aparecía dentro del link (<a>).
 
-__File:__ Ruta del archivo donde se encontró el link.
+```File:``` Ruta del archivo donde se encontró el link.
 
 **Ejemplo**
 
 ![path](imgReadme/soloPath.png)
 
+
+
 **Opciones**
 
-  **-Comando --Validate**
+  **Comando --Validate**
 ```sh
 $ md-links <path> --validate
 ```
@@ -81,7 +83,7 @@ Obtendrás el estado de los enlaces de tus archivos
 ![comando validate](imgReadme/validate.png)
 
 
-  **-Comando --stats**
+  **Comando --stats**
 ```sh
 $ md-links <path> --stats
 ```
@@ -92,7 +94,7 @@ Obtendrás las estadísticas del total de enlaces y los enlaces únicos
 ![comando stats](imgReadme/stats.png)
 
 
-  **-Comando --validate --stats**
+  **Comando --validate --stats**
 ```sh
 $ md-links <path> --validate --stats
 ```
@@ -103,13 +105,6 @@ Obtendrás las estadísticas de los enlaces rotos
 ![comando stats](imgReadme/validate-stats.png)
 
 __Asegurese de ingresar una ruta valida que contenga archivos tipo Markadown__
-
-
-## 5. Autora
-
-Sara Sierra
-<a href="https://github.com/SaraStefania"><img src="imgReadme/logoGithub.png" alt="github"></a>
-<a href="https://www.linkedin.com/in/sara-stefania-sierra-ramos/"><img src="imgReadme/linkedin.png" alt="github"></a>
 
 
 
