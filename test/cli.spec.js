@@ -29,7 +29,7 @@ const urls = [
 //----------------Total Links----------------
 describe('totalLinks', () =>{
     it('Deberia retornar un arreglo con el total de links', () =>{
-        expect(totalLinks(urls)).toEqual({total: 3})
+        expect(totalLinks(urls)).toEqual( 3)
     })
 })
 
@@ -37,7 +37,7 @@ describe('totalLinks', () =>{
 
 describe('totalUnique', () =>{
     it('Deberia retornar un arreglo con el total de links', () =>{
-        expect(totalUnique(urls)).toEqual({Unique: 3})
+        expect(totalUnique(urls)).toEqual(3)
     })
     
 })
@@ -45,6 +45,6 @@ describe('totalUnique', () =>{
 //-------------------Links rotos-----------------
 describe('totalBroken', () =>{
     it('Deberia retornar un arreglo con el total de links rotos', () =>{
-        expect(totalbroken(urls)).toEqual({Broken: 2})
+        expect(totalbroken(urls)).toEqual( 2)
     })
 })
