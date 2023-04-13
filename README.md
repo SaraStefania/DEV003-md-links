@@ -34,14 +34,14 @@ Esta biblioteca es útil para verificar si algunos de nuestros enlaces están re
 ## 3. Instalación
 
 ```sh
-npm install md-links-linkMinder
+$ npm install md-links-linkMinder
 ```
 
 ## 4. Comandos 
 
 Accede a la terminal y ejecuta el comando
 ```sh
- md-links --help
+$ md-links --help
  ```
 
  Esto te mostrará las instrucciones para seguir y podrás conocer todas las opciones y argumentos disponibles para utilizar la herramienta.
@@ -59,7 +59,9 @@ El segundo paso es incertar la ruta a validar: __md-links ./path-a-evaluar.md__
 Sólo colocando la ruta obtendremos un arreglo de objetos con las propiedades:
 
 __Href:__ URL encontrada.
+
 __Text:__ Texto que aparecía dentro del link (<a>).
+
 __File:__ Ruta del archivo donde se encontró el link.
 
 **Ejemplo**
@@ -106,7 +108,8 @@ __Asegurese de ingresar una ruta valida que contenga archivos tipo Markadown__
 ## 5. Autora
 
 Sara Sierra
-[![github](imgReadme/logoGithub.png)](https://github.com/SaraStefania)
-[![linkedin](imgReadme/linkedin.png)](https://www.linkedin.com/in/sara-stefania-sierra-ramos/)
+<a href="https://github.com/SaraStefania"><img src="imgReadme/logoGithub.png" alt="github"></a>
+<a href="https://www.linkedin.com/in/sara-stefania-sierra-ramos/"><img src="imgReadme/linkedin.png" alt="github"></a>
+
 
 
