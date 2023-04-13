@@ -59,6 +59,7 @@ const directorio = (router, arrayOfFiles = []) => {
     return false
   }
 };
+
 //------------------Traer text, href, file---------------------
 const extractLinks = (router) => {
   return new Promise((resolve, reject) => {
@@ -129,10 +130,6 @@ const getStatus = (link) =>
   })  
     )
   );
- 
-
-  
-
 
 //------------------exportar-------------------------
 module.exports = {
