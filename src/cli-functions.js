@@ -2,15 +2,14 @@
 //----------------------Total de links------------------------
 const totalLinks =(links) =>{
     const total = links.length
-    return {
-        total: total
-    }
+    return  total
+    
 }
 
 
 //----------------------Links unicos-----------------------
 const totalUnique = (links) =>{
-    const unique = []
+  let unique = []
     for (let i = 0; i < links.length; i++) {
       //comprobar si el valor de href ya esta en el arreglo unique
       if (!unique.includes(links[i].href)) {
@@ -18,19 +17,19 @@ const totalUnique = (links) =>{
         unique.push(links[i].href);
       }
     }
-    return {
-        Unique: unique.length
-    }
+    return unique.length
+    
 }
 
 
 //------------------------Links rotos------------------
 const totalbroken = (links) =>{
         const broken = links.filter((link) => link.message === 'fail');
-        return {
-            Broken: broken.length
-        };
+        return broken.length
+    
 }
+
+
 
 
 module.exports ={
