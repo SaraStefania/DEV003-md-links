@@ -54,7 +54,7 @@ $ md-links --help
 ![comando --help](imgReadme/help.png)
 
 
-El segundo paso es incertar la ruta a validar: ```d-links ./path-a-evaluar.md```
+El segundo paso es incertar la ruta a validar: ```md-links ./path-a-evaluar.md```
 
 Sólo colocando la ruta obtendremos un arreglo de objetos con las propiedades:
 
