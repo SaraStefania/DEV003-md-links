@@ -1,6 +1,6 @@
 {
-  "name": "md-links",
-  "version": "0.1.0",
+  "name": "md-links-minder",
+  "version": "1.0.1",
   "engines": {
     "node": ">=16.x"
   },
@@ -9,8 +9,8 @@
     "version": "5.5.0",
     "commit": "a63a770ea33332882790401851df337734b0b734"
   },
-  "description": "## Índice",
-  "main": "index.js",
+  "description": "Verificar el estado de los enlaces",
+  "main": "src/index.js",
   "directories": {
     "test": "test"
   },

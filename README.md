@@ -34,7 +34,7 @@ Esta biblioteca es útil para verificar si algunos de nuestros enlaces están re
 ## 3. Instalación
 
 ```sh
-$ npm install md-links-linkMinder
+$ npm i md-links-minder
 ```
 
 ## 4. Comandos 
@@ -44,7 +44,7 @@ Accede a la terminal y ejecuta el comando
 $ md-links --help
  ```
 
- Esto te mostrará las instrucciones para seguir y podrás conocer todas las opciones y argumentos disponibles para utilizar la herramienta.
+ Te mostrará las instrucciones para seguir y podrás conocer todas las opciones y argumentos disponibles para utilizar la herramienta.
 
 **Ejemplo**
 
